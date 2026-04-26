@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCPI人格测试 - 大学生竞争与压力指标</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .header .title-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            margin: 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .content {
+            padding: 40px 60px;
+        }
+        
+        .intro {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .intro .intro-meta {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .intro p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px 25px;
+            margin: 30px -60px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            border-left: 5px solid #667eea;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .question:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .question-text {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .multi-hint {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-left: 10px;
+            font-weight: normal;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+            flex-shrink: 0;
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+        }
+        
+        .option-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 8px;
+            min-width: 25px;
+            flex-shrink: 0;
+        }
+        
+        .option-text {
+            color: #555;
+            flex: 1;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto 20px;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        .ending {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .ending p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        /* 结果页面样式 */
+        .result-container {
+            display: none;
+            padding: 40px 60px;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .result-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .result-type-code {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .result-type-name {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .result-subtitle {
+            font-size: 1.1em;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .result-content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .result-content h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .result-content p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+        
+        .advice-box {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin-top: 20px;
+        }
+        
+        .advice-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .advice-box p {
+            color: #666;
+            margin-bottom: 0;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .score-label {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .score-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .dimension-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .dimension-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .dimension-name {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .dimension-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .action-btn.secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* 数据面板样式 */
+        .admin-panel {
+            display: none;
+            padding: 40px 60px;
+            background: #f8f9fa;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .admin-title {
+            font-size: 1.8em;
+            color: #333;
+        }
+        
+        .export-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 8px;
+            font-size: 0.95em;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .data-table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .data-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .access-code {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .access-code strong {
+            color: #856404;
+            font-size: 1.1em;
+        }
+        
+        .share-tip {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .share-tip h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .share-tip p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6em;
+            }
+            .content {
+                padding: 25px 30px;
+            }
+            .section-title {
+                margin: 20px -30px 15px;
+            }
+            .result-type-code {
+                font-size: 3em;
+            }
+            .result-type-name {
+                font-size: 1.5em;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="subtitle">《大学生精神状态蓝皮书》</div>
+            <h1>SCPI人格测试</h1>
+            <div class="title-desc">Student Competition & Pressure Indicator<br>大学生竞争与压力指标</div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <!-- 问卷表单 -->
+        <form id="quizForm" class="content">
+            <div class="intro">
+                <h2>到底是谁在学习吓唬我？是什么在压力我？</h2>
+                <div class="intro-meta">题目由西电非智能提供创意，"XDUer新生研讨会小组任务苦难户"与"大学生本生互助协会"联合研发，特别鸣谢"元念集合体"提供支持。</div>
+                <p>20道题测试大学生竞争与压力指标，本测试耗时约3分钟，请诚实作答。骗诡秘、骗兄弟，但别骗自己——半夜emo的时候别怪我没提醒你（开个玩笑）。</p>
+            </div>
+            
+            <!-- 第一部分：你是谁？ -->
+            <div class="section-title">📋 第一部分：你是谁？（基础画像）</div>
+            
+            <div class="question" data-q="1">
+                <div class="question-text">
+                    <span class="question-number">1</span>
+                    你的学校是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q1" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">西安电子科技大学（西电）——自己人，懂自懂</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="B" data-drive="3" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">其他985/211/双一流——卷中卷选手</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">普通公办本科——稳扎稳打</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="D" data-drive="1" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">民办/独立学院——富贵迷人眼</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="E" data-drive="1" data-tolerance="2">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">高职高专——技术才是硬道理</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="2">
+                <div class="question-text">
+                    <span class="question-number">2</span>
+                    你的年级？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q2" value="A" data-drive="1" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">大一——还感觉大学比较轻松</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">大二——开始意识到事情不对</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="C" data-drive="3" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">大三——人生的十字路口，每一个都堵车</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="D" data-drive="2" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">大四——已经麻了</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="E" data-drive="2" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">研究生及以上——过来人，看戏中</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="3">
+                <div class="question-text">
+                    <span class="question-number">3</span>
+                    你的专业门类？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q3" value="A" data-drive="3" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">电子信息/计算机/自动化——西电特产，头发换学分</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="B" data-drive="3" data-tolerance="3">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">理学/数学/物理——基础学科，respect</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">机械/材料/电气——工科命运共同体</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="D" data-drive="2" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">经管/人文/社科——另一种卷法</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="E" data-drive="2" data-tolerance="2">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">其他</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 第二部分：课表+实验压力 -->
+            <div class="section-title">⏰ 第二部分：课表+实验压力（时间被谁偷走了）</div>
+            
+            <div class="question" data-q="4">
+                <div class="question-text">
+                    <span class="question-number">4</span>
+                    看到课表的第一反应是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q4" value="A" data-drive="2" data-tolerance="1">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">密密麻麻，我的空闲时间被教务处吃了吗</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="B" data-drive="2" data-tolerance="1">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">早八晚九连轴转，排课系统你是不是恨我</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">有点满，但尚能挤出呼吸时间</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="D" data-drive="1" data-tolerance="3">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">稀疏得像程序员的头发，稳了</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="5">
+                <div class="question-text">
+                    <span class="question-number">5</span>
+                    一周五天早八，你的灵魂状态是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q5" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">早八人早八魂，提前吃早饭到教室——卷王圣体</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">人到了，魂还在床上——行尸走肉</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">闹钟响了关关了响，与被窝极限拉扯——仰卧起坐选手</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="D" data-drive="1" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">早八？那节课我选的是"睡眠实践"——已摆烂</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="6">
+                <div class="question-text">
+                    <span class="question-number">6</span>
+                    当实验报告、理论课作业、竞赛备赛三重DDL同时逼近，你的感受是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q6" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">有提前规划，从容应对——时间管理大师</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">有点窒息，但熬一熬能过去——典型工科生</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="C" data-drive="2" data-tolerance="1">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">焦头烂额，感觉自己是八爪鱼且触手打结——西电日常</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="D" data-drive="1" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">直接选择性遗忘，哪个顺眼先做哪个——佛系生存</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 第三部分：空间拥挤压力 -->
+            <div class="section-title">📚 第三部分：空间拥挤压力（宿舍+图书馆——物理层面的卷）</div>
+            
+            <div class="question" data-q="7">
+                <div class="question-text">
+                    <span class="question-number">7</span>
+                    宿舍里室友都在干自己的事时的时候，你的感受是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q7" value="A" data-drive="2" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">热闹，喜欢这种氛围——社交型人格</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="B" data-drive="2" data-tolerance="3">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">无所谓，戴上耳机就是我的世界——边界感大师</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">有点难受，想找个没人的地方待着——需要喘息空间</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="D" data-drive="1" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">反感，看见人多就烦躁——请给我一个单人间</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="8">
+                <div class="question-text">
+                    <span class="question-number">8</span>
+                    平时，去图书馆/自习室发现座无虚席，你的第一反应？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q8" value="A" data-drive="2" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">淡定转身，换个地方学——心态王者</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">转一圈逐个审视，试图找到空位——侦探模式</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="C" data-drive="2" data-tolerance="1">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">内心崩溃但表面冷静，站在原地更焦虑地找座位——小死一次</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="D" data-drive="1" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">骂骂咧咧发朋友圈："今天图书馆是不是发钱？"然后回宿舍——西电特色朋友圈素材+1</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="E" data-drive="1" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">恰恰相反，有很多空座位啊——没想到吧</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="9">
+                <div class="question-text">
+                    <span class="question-number">9</span>
+                    考试周，图书馆/自习室的占座盛况，让你感到？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q9" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">正常现象，我也参与了占座——卷入了这场战争</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="B" data-drive="2" data-tolerance="3">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">有点焦虑，但不影响我早起找位置——老兵心态</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">压力山大，每天早起抢座像打仗——图书馆难民</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="D" data-drive="1" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">已经放弃，在宿舍学也挺好——或者根本不学</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="E" data-drive="1" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">恰恰相反，有很多空座位啊——没想到吧</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 第四部分：课堂同辈竞争压力 -->
+            <div class="section-title">🎓 第四部分：课堂同辈竞争压力（前排举手的都是什么人啊）</div>
+            
+            <div class="question" data-q="10">
+                <div class="question-text">
+                    <span class="question-number">10</span>
+                    老师提问，有的同学抢着举手，此时你在想？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q10" value="A" data-drive="2" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">牛逼，这题我听都没听懂——大开眼界</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="B" data-drive="1" data-tolerance="3">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">那咋了，书都没带内心毫无波澜——关我何事</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">默默翻书并打开手机，假装自己在思考——AI深度思考中</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="D" data-drive="2" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">为什么举手的总是那些人——大跌眼镜</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="11">
+                <div class="question-text">
+                    <span class="question-number">11</span>
+                    没想到有同学已经提前做完课后题/实验报告，你的反应？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q11" value="A" data-drive="3" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">危机感拉满，立刻追赶进度——自我PUA成功</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q11" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">表面淡定，准备采取行动——我慌的一匹</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q11" value="C" data-drive="2" data-tolerance="3">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">内心：哦，人类的悲欢并不相通——鲁迅附体</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q11" value="D" data-drive="1" data-tolerance="3">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">无所谓，我有自己的节奏——反卷先锋</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 第五部分：竞赛与荣誉压力 -->
+            <div class="section-title">🏆 第五部分：竞赛与荣誉压力（简历上的军备竞赛）</div>
+            
+            <div class="question" data-q="12">
+                <div class="question-text">
+                    <span class="question-number">12</span>
+                    你参加学科竞赛/科技竞赛的主要驱动力是？<span class="multi-hint">（可多选）</span>
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="A" data-drive="3" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">保研加分——懂的都懂</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="B" data-drive="3" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">考研复试筹码——有备无患</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="C" data-drive="3" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">就业简历镀金——为了口饭吃</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="D" data-drive="3" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">奖学金/荣誉称号——名利双收</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="E" data-drive="2" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">兴趣驱动，单纯想试试——理想主义者</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="F" data-drive="2" data-tolerance="2">
+                        <span class="option-label">F.</span>
+                        <span class="option-text">身边人都参加，我不参加显得不合群——被迫营业</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q12" value="G" data-drive="1" data-tolerance="3">
+                        <span class="option-label">G.</span>
+                        <span class="option-text">没参加过——围观群众</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="13">
+                <div class="question-text">
+                    <span class="question-number">13</span>
+                    备赛期间，你的生活状态最接近？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q13" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">全程高效运转，劳逸结合——六边形战士</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q13" value="B" data-drive="3" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">快到DDL了，熬夜是常态，咖啡是生命——燃烧自己</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q13" value="C" data-drive="3" data-tolerance="1">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">课程和竞赛两头顾不过来，经常崩溃——在悬崖边跳舞</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q13" value="D" data-drive="1" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">直接摆烂，重在参与——心态极好</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q13" value="E" data-drive="1" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">不怎么参加过竞赛——岁月静好</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="14">
+                <div class="question-text">
+                    <span class="question-number">14</span>
+                    看到同学竞赛拿奖/发论文/拿专利时，你的感受是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q14" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">为TA高兴，同时激励自己——正向反馈</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q14" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">有点焦虑，担心自己被落下——轻度FOMO</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q14" value="C" data-drive="2" data-tolerance="1">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">压力巨大，感觉自己一事无成——深夜emo素材</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q14" value="D" data-drive="2" data-tolerance="2">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">已经麻了，人与人的差距比人和狗都大——认清现实</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q14" value="E" data-drive="1" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">不关注，过好自己的日子——人间清醒</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 第六部分：绩点与排名焦虑 -->
+            <div class="section-title">📊 第六部分：绩点与排名焦虑（小数点后两位的战争）</div>
+            
+            <div class="question" data-q="15">
+                <div class="question-text">
+                    <span class="question-number">15</span>
+                    你对当前绩点/排名的焦虑程度是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q15" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">非常满意，毫无焦虑——人生赢家</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q15" value="B" data-drive="2" data-tolerance="3">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">比较满意，偶尔想想——正常波动</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q15" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">一般，但看到别人绩点会慌——间歇性焦虑</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q15" value="D" data-drive="3" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">不太满意，经常为此失眠——绩点PTSD</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q15" value="E" data-drive="1" data-tolerance="2">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">已经麻了，绩点不能定义我——哲学高度</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="16">
+                <div class="question-text">
+                    <span class="question-number">16</span>
+                    你是否属于"保研边缘人"（排名在保研线上下浮动，差一名可能就没了）？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q16" value="A" data-drive="3" data-tolerance="1">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">是，非常边缘，每学期都在担心——悬崖边的舞者</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q16" value="B" data-drive="3" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">是，有一定把握但不确定——悬而未决</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q16" value="C" data-drive="3" data-tolerance="3">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">不是，稳在保研线内——安全区内但不敢松懈</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q16" value="D" data-drive="2" data-tolerance="3">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">不是，明确不走保研——另一条赛道</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q16" value="E" data-drive="1" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">大一大二，还没到考虑的时候——珍惜当下</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="17">
+                <div class="question-text">
+                    <span class="question-number">17</span>
+                    你会为了刷高绩点而刻意选择"给分高但学不到东西"的课吗？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q17" value="A" data-drive="3" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">会，这是生存策略——没招啊我</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q17" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">偶尔会，在可控范围内——有限妥协</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q17" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">想过，但下不去手——挣扎ing</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q17" value="D" data-drive="2" data-tolerance="3">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">不会，按兴趣和能力选课——理想主义者</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q17" value="E" data-drive="2" data-tolerance="2">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">抢不到，没得选——被安排的明明白白</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 第七部分：保研·考研·就业 -->
+            <div class="section-title">🎯 第七部分：保研·考研·就业（终极三问）</div>
+            
+            <div class="question" data-q="18">
+                <div class="question-text">
+                    <span class="question-number">18</span>
+                    你目前对未来方向的选择偏向是？<span class="multi-hint">（可多选）</span>
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="checkbox" name="q18" value="A" data-drive="3" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">保研——卷了三年就为这一刻</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q18" value="B" data-drive="3" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">考研——再来一次高考</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q18" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">出国深造——换一个地方卷</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q18" value="D" data-drive="2" data-tolerance="3">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">直接就业——早日变现</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q18" value="E" data-drive="2" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">考公/考编——求稳</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="q18" value="F" data-drive="1" data-tolerance="2">
+                        <span class="option-label">F.</span>
+                        <span class="option-text">没想清楚——走一步算一步，别逼自己</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="19">
+                <div class="question-text">
+                    <span class="question-number">19</span>
+                    你对当前所选方向（保/考/就业）的信心程度是？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q19" value="A" data-drive="3" data-tolerance="3">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">信心满满，目标明确——卷王，天选之子</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q19" value="B" data-drive="2" data-tolerance="3">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">有点忐忑，但总体乐观——嗯</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q19" value="C" data-drive="2" data-tolerance="2">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">走一步看一步，心里没底——大多数人的状态</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q19" value="D" data-drive="2" data-tolerance="1">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">非常焦虑，经常失眠——需要关注</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q19" value="E" data-drive="1" data-tolerance="2">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">还没选方向，先活着——当代大学生生存现状</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question" data-q="20">
+                <div class="question-text">
+                    <span class="question-number">20</span>
+                    你认为本校/本专业的"内卷"程度如何？
+                </div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q20" value="A" data-drive="3" data-tolerance="2">
+                        <span class="option-label">A.</span>
+                        <span class="option-text">非常卷，人均图书馆睡袋党——西电特色</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q20" value="B" data-drive="2" data-tolerance="2">
+                        <span class="option-label">B.</span>
+                        <span class="option-text">比较卷，压力明显——学校常态</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q20" value="C" data-drive="2" data-tolerance="3">
+                        <span class="option-label">C.</span>
+                        <span class="option-text">适度，在可接受范围内——尚能呼吸</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q20" value="D" data-drive="1" data-tolerance="3">
+                        <span class="option-label">D.</span>
+                        <span class="option-text">不太卷，氛围宽松——珍惜你的学校</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q20" value="E" data-drive="1" data-tolerance="3">
+                        <span class="option-label">E.</span>
+                        <span class="option-text">完全不卷——请告诉我你在哪，我想转学</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="ending">
+                <p>感谢你坚持填完这份问卷。你的每一次"焦虑"、"麻木"、"无所谓"……都是当代大学生精神图谱上的一笔真实记录。</p>
+            </div>
+            
+            <button type="submit" class="submit-btn">🎯 提交并查看我的SCPI类型</button>
+        </form>
+        
+        <!-- 结果页面 -->
+        <div class="result-container" id="resultContainer">
+            <div class="result-header">
+                <div class="result-badge">SCPI 人格类型</div>
+                <div class="result-type-code" id="resultCode">--</div>
+                <div class="result-type-name" id="resultName">--</div>
+                <div class="result-subtitle" id="resultSubtitle">--</div>
+            </div>
+            
+            <div class="score-display">
+                <div class="score-label">你的SCPI维度得分</div>
+                <div class="dimension-scores">
+                    <div class="dimension-item">
+                        <div class="dimension-name">驱动力</div>
+                        <div class="dimension-value" id="driveScore">-</div>
+                    </div>
+                    <div class="dimension-item">
+                        <div class="dimension-name">耐受度</div>
+                        <div class="dimension-value" id="toleranceScore">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-content" id="resultContent">
+                <!-- 动态插入结果文案 -->
+            </div>
+            
+            <div class="share-tip">
+                <h4>📱 如何获得短链接分享？</h4>
+                <p>将此页面部署到以下平台即可获得短链接：</p>
+                <p><strong>推荐方案：</strong></p>
+                <p>1. GitHub Pages → 链接格式：https://xxx.github.io/scpi</p>
+                <p>2. Vercel → 自动生成短链接</p>
+                <p>3. 腾讯云开发 → 国内访问快</p>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn primary" onclick="location.reload()">🔄 重新测试</button>
+                <button class="action-btn secondary" onclick="showAdminPanel()">📊 查看数据面板</button>
+            </div>
+        </div>
+        
+        <!-- 数据管理面板 -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-header">
+                <h2 class="admin-title">📊 SCPI数据管理面板</h2>
+                <button class="export-btn" onclick="exportData()">📥 导出CSV数据</button>
+            </div>
+            
+            <div class="access-code">
+                <strong>🔐 访问密码：scpi2024</strong>（数据已自动保存到本地）
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalResponses">0</div>
+                    <div class="stat-label">总参与人数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="ahCount">0</div>
+                    <div class="stat-label">卷王(AH)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="amCount">0</div>
+                    <div class="stat-label">自驱者(AM)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="alCount">0</div>
+                    <div class="stat-label">执鞭者(AL)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="phCount">0</div>
+                    <div class="stat-label">韧草(PH)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pmCount">0</div>
+                    <div class="stat-label">裹挟者(PM)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="plCount">0</div>
+                    <div class="stat-label">避卷者(PL)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="unCount">0</div>
+                    <div class="stat-label">混沌者(UN)</div>
+                </div>
+            </div>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('typeDist')">📈 类型分布</button>
+                <button class="tab-btn" onclick="switchTab('dimensions')">📊 维度分析</button>
+                <button class="tab-btn" onclick="switchTab('timeline')">📉 时间趋势</button>
+                <button class="tab-btn" onclick="switchTab('rawdata')">📝 原始数据</button>
+            </div>
+            
+            <div id="tab-typeDist" class="tab-content active">
+                <div class="chart-container">
+                    <div class="chart-title">SCPI人格类型分布</div>
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+            
+            <div id="tab-dimensions" class="tab-content">
+                <div class="chart-container">
+                    <div class="chart-title">驱动力 vs 耐受度 散点分布</div>
+                    <canvas id="scatterChart"></canvas>
+                </div>
+            </div>
+            
+            <div id="tab-timeline" class="tab-content">
+                <div class="chart-container">
+                    <div class="chart-title">每日参与人数趋势</div>
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+            
+            <div id="tab-rawdata" class="tab-content">
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>时间</th>
+                                <th>类型</th>
+                                <th>驱动力</th>
+                                <th>耐受度</th>
+                                <th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th>
+                                <th>Q6</th><th>Q7</th><th>Q8</th><th>Q9</th><th>Q10</th>
+                                <th>Q11</th><th>Q12</th><th>Q13</th><th>Q14</th><th>Q15</th>
+                                <th>Q16</th><th>Q17</th><th>Q18</th><th>Q19</th><th>Q20</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rawDataBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="action-btn primary" onclick="backToQuiz()">📝 返回问卷</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 数据存储
+        const STORAGE_KEY = 'SCPI_Test_Data_v2';
+        
+        // 结果文案配置
+        const resultProfiles = {
+            'AH': {
+                name: '卷王',
+                subtitle: '主动高耐受型',
+                tagline: '压力是你呼吸的空气，唯一需要担心的是发际线和黑眼圈。',
+                content: `
+                    <h3>你是人群中前5%的永动机。</h3>
+                    <p>别人看到满课表叹气，你看到满课表开始排优先级。早八到晚十只是基操，竞赛、绩点、保研、项目一网打尽。你的日历比国家电网调度还密，你的待办清单比超市小票还长。</p>
+                    <p>压力对你来说不是负担，是燃料。越忙越兴奋，越卷越精神。别人在图书馆睡着是累的，你在图书馆睡着是因为闭馆音乐响了而你不想走。</p>
+                    <p>你的危险不在于扛不住，而在于你太能扛了。发际线和黑眼圈是你唯一的KPI预警信号。你的人生信条是："既然选择了卷，就别问几点睡。"</p>
+                    <div class="advice-box">
+                        <h4>给AH型的生存建议：</h4>
+                        <p>记得吃饭，记得体检，记得偶尔放过自己。保研成功后请睡三天。</p>
+                    </div>
+                `
+            },
+            'AM': {
+                name: '自驱者',
+                subtitle: '主动中耐受型',
+                tagline: '你按自己的节奏卷，偶尔焦虑但从不失控。',
+                content: `
+                    <h3>你是同龄人里少有的"清醒卷"。</h3>
+                    <p>你知道自己要什么，也知道自己不要什么。不会因为别人卷而慌乱，也不会因为别人躺而动摇。你有自己的节奏——该学学，该玩玩，期末绩点出来刚好够用，竞赛参加一两个刚好加分。</p>
+                    <p>你的焦虑是间歇性的，通常在出成绩前一晚或看到别人拿奖时短暂上线，但睡一觉就好了。你不做无意义的卷，每一份努力都有明确的回报预期。</p>
+                    <p>别人看你好像很轻松，其实你只是在看不见的地方用功。你信奉的是"精准努力，拒绝无效内耗"。</p>
+                    <div class="advice-box">
+                        <h4>给AM型的自驱建议：</h4>
+                        <p>保持节奏，你走在一条比卷王更可持续的路上。</p>
+                    </div>
+                `
+            },
+            'AL': {
+                name: '执鞭者',
+                subtitle: '主动低耐受型',
+                tagline: '一边逼自己跑，不敢懈怠，老板喜欢的天选打工人。',
+                content: `
+                    <h3>你是自我PUA金牌选手，老板最喜欢的天选打工人。</h3>
+                    <p>你非常想卷，但你的心理承受能力跟不上你的野心。一边给自己定下超高目标，一边在深夜因为达不到而失眠崩溃。绩点掉了一分像天塌了，竞赛没拿奖感觉人生完了。</p>
+                    <p>你最大的痛苦来源不是外界的压力，而是你自己。你手里拿着一根鞭子，鞭策的对象是你自己。不敢懈怠，不能停下，总觉得稍微松一口气就会被全世界超过。</p>
+                    <p>你是七种类型里最需要被心疼的那一个。你已经做得很好了，只是你自己不知道。</p>
+                    <div class="advice-box">
+                        <h4>给AL型的建议：</h4>
+                        <p>把鞭子放下。你不需要通过把自己逼到悬崖边来证明价值。考虑一下学校的心理咨询中心，这不是软弱，是自救。</p>
+                    </div>
+                `
+            },
+            'PH': {
+                name: '韧草',
+                subtitle: '被动高耐受型',
+                tagline: '嘴上说累，身体已把事做完。适应力是你最大的天赋。',
+                content: `
+                    <h3>你是风刮不倒的草，环境怎么推你怎么走，但从不折断。</h3>
+                    <p>你可能没有主动选择卷，但命运把你扔进了卷的环境——比如来了西电。你嘴上说累，身体已经把事做完了。该熬的夜一点不少，该交的作业一份没落。你不是卷的发起者，但你是卷的完美适应者。</p>
+                    <p>你的天赋在于适应力。把你放在高压环境里你不会崩溃，把你放在低压环境你也不会废掉。你像一株野草，给点土壤就能活，活得还挺好。</p>
+                    <p>你可能不太会宣传自己有多努力，但成绩单和项目经历会替你说话。</p>
+                    <div class="advice-box">
+                        <h4>给PH型的建议：</h4>
+                        <p>适应力是你最大的天赋，但偶尔也问问自己：除了适应环境，你自己到底想要什么？</p>
+                    </div>
+                `
+            },
+            'PM': {
+                name: '裹挟者',
+                subtitle: '被动中耐受型',
+                tagline: '本不想卷，奈何身边全是卷王。你不是一个人在被迫营业。',
+                content: `
+                    <h3>你是卷与躺之间的仰卧起坐选手，"卷心菜"本菜。</h3>
+                    <p>你本不想卷，真的。但室友都在书桌前坐着，你只好默默打开了电脑。同学都在报竞赛，你也跟着填了报名表。你不是自己想卷，你是被卷进了这场洪流。</p>
+                    <p>你的努力程度，刚好够维持焦虑。不努力会慌，太努力会累，于是你精准地卡在中间——既不拔尖也不垫底，既焦虑又懒得改变。</p>
+                    <p>你是七种类型里人数最多的那一类。你不是一个人在被迫营业，你有很多难兄难弟。你们一起吐槽内卷，然后一起继续卷。</p>
+                    <div class="advice-box">
+                        <h4>给PM型的建议：</h4>
+                        <p>如果暂时跳不出这个系统，至少找到一件自己真正喜欢的事，让它成为你疲惫生活里的出口。</p>
+                    </div>
+                `
+            },
+            'PL': {
+                name: '避卷者',
+                subtitle: '被动低耐受型',
+                tagline: '精神上已退学，肉体还在教室。找一个低压力赛道吧。',
+                content: `
+                    <h3>你是精神上已经退学、肉体还在教室的人。</h3>
+                    <p>看到别人卷你烦，想到自己要卷你更烦。图书馆占座？算了。竞赛报名？下次再说。你对压力的耐受度极低，一想到竞争就本能地往后缩。你最大的焦虑不是"卷不过别人"，而是"我为什么在这里"。</p>
+                    <p>你可能常常怀疑自己选错了专业、选错了学校、甚至选错了人生。但别急着否定自己——你只是还没有找到适合的战场。</p>
+                    <p>有些人适合在丛林里搏杀，有些人适合在草原上游牧。你可能是后者，只是暂时被困在了丛林里。</p>
+                    <div class="advice-box">
+                        <h4>给PL型的建议：</h4>
+                        <p>找一个低压力的赛道。考研换专业、毕业后转行、找一个不需要拼绩点的工作……出路比你想象得多。逃避不可耻，有时候还有用。</p>
+                    </div>
+                `
+            },
+            'UN': {
+                name: '混沌者',
+                subtitle: '驱动力不明确型',
+                tagline: '摇摆，今天卷明天躺，连自己都摸不透。混沌也是一种生存策略。',
+                content: `
+                    <h3>你是七种类型里最难以预测的那一个——连你自己都摸不透自己。</h3>
+                    <p>今天信誓旦旦列了学习计划，明天一觉醒来觉得人生苦短及时行乐。这一周觉得自己能保研，下一周觉得毕业就行。你的驱动力模式不稳定，时而主动时而被动，时而亢奋时而咸鱼。</p>
+                    <p>你可能会在考试周爆发惊人的战斗力，也可能在学期中间突然失联两周。你的人设每天都在变，连你最亲近的室友都搞不清你到底算什么类型。</p>
+                    <p>但这种混乱可能不是缺点。混沌意味着可能性，你还没有被任何标签定义。你正在探索，只是还没探索出结果。</p>
+                    <div class="advice-box">
+                        <h4>给UN型的建议：</h4>
+                        <p>混沌期是正常的，尤其在大一大二。给自己一点时间，但别太久。大三前最好找到自己的方向，否则你会变成PL型——那时就真的麻了。</p>
+                    </div>
+                `
+            }
+        };
+        
+        // 获取所有数据
+        function getAllData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+        
+        // 保存数据
+        function saveData(response) {
+            const allData = getAllData();
+            response.id = Date.now();
+            response.timestamp = new Date().toLocaleString('zh-CN');
+            allData.push(response);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            let answered = 0;
+            const totalQuestions = 20;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (i === 12 || i === 18) {
+                    // 多选题
+                    if (document.querySelectorAll(`input[name="q${i}"]:checked`).length > 0) {
+                        answered++;
+                    }
+                } else {
+                    // 单选题
+                    if (document.querySelector(`input[name="q${i}"]:checked`)) {
+                        answered++;
+                    }
+                }
+            }
+            
+            const progress = (answered / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        // 监听选项
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const name = this.name;
+                const isCheckbox = this.type === 'checkbox';
+                
+                if (!isCheckbox) {
+                    // 单选题：移除其他选项的选中状态
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                        r.closest('.option').classList.remove('selected');
+                    });
+                }
+                
+                // 当前选项添加选中状态
+                if (this.checked) {
+                    this.closest('.option').classList.add('selected');
+                } else {
+                    this.closest('.option').classList.remove('selected');
+                }
+                
+                updateProgress();
+            });
+        });
+        
+        // 计算SCPI类型
+        function calculateSCPIType(driveScore, toleranceScore) {
+            let driveLevel, toleranceLevel;
+            
+            // 驱动力分级
+            if (driveScore >= 46) driveLevel = 'H';
+            else if (driveScore >= 36) driveLevel = 'M';
+            else driveLevel = 'L';
+            
+            // 耐受度分级
+            if (toleranceScore >= 46) toleranceLevel = 'H';
+            else if (toleranceScore >= 36) toleranceLevel = 'M';
+            else toleranceLevel = 'L';
+            
+            // 特殊情况
+            if (Math.abs(driveScore - toleranceScore) > 15) {
+                return 'UN';
+            }
+            
+            const typeCode = driveLevel + toleranceLevel;
+            const typeMap = {
+                'HH': 'AH', 'HM': 'AM', 'HL': 'AL',
+                'MH': 'PH', 'MM': 'PM', 'ML': 'PL',
+                'LH': 'PH', 'LM': 'PM', 'LL': 'PL'
+            };
+            
+            return typeMap[typeCode] || 'UN';
+        }
+        
+        // 提交表单
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 检查完成度
+            let unanswered = [];
+            for (let i = 1; i <= 20; i++) {
+                if (i === 12 || i === 18) {
+                    if (document.querySelectorAll(`input[name="q${i}"]:checked`).length === 0) {
+                        unanswered.push(i);
+                    }
+                } else {
+                    if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+                        unanswered.push(i);
+                    }
+                }
+            }
+            
+            if (unanswered.length > 0) {
+                alert(`还有 ${unanswered.length} 道题未完成！\n未完成：${unanswered.join(', ')}`);
+                document.querySelector(`[data-q="${unanswered[0]}"]`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            // 计算得分
+            let driveScore = 0, toleranceScore = 0;
+            let answers = {};
+            
+            for (let i = 1; i <= 20; i++) {
+                if (i === 12 || i === 18) {
+                    // 多选题：取平均值
+                    const checked = document.querySelectorAll(`input[name="q${i}"]:checked`);
+                    let dSum = 0, tSum = 0;
+                    checked.forEach(cb => {
+                        dSum += parseInt(cb.getAttribute('data-drive'));
+                        tSum += parseInt(cb.getAttribute('data-tolerance'));
+                    });
+                    driveScore += dSum / checked.length;
+                    toleranceScore += tSum / checked.length;
+                    answers[`q${i}`] = Array.from(checked).map(cb => cb.value).join(',');
+                } else {
+                    // 单选题
+                    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                    const d = parseInt(selected.getAttribute('data-drive'));
+                    const t = parseInt(selected.getAttribute('data-tolerance'));
+                    driveScore += d;
+                    toleranceScore += t;
+                    answers[`q${i}`] = selected.value;
+                }
+            }
+            
+            driveScore = Math.round(driveScore);
+            toleranceScore = Math.round(toleranceScore);
+            
+            // 确定类型
+            const typeCode = calculateSCPIType(driveScore, toleranceScore);
+            const profile = resultProfiles[typeCode];
+            
+            // 保存数据
+            saveData({
+                type: typeCode,
+                driveScore: driveScore,
+                toleranceScore: toleranceScore,
+                answers: answers
+            });
+            
+            // 显示结果
+            document.getElementById('quizForm').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            document.getElementById('resultCode').textContent = typeCode;
+            document.getElementById('resultName').textContent = profile.name;
+            document.getElementById('resultSubtitle').textContent = profile.subtitle + ' | ' + profile.tagline;
+            document.getElementById('driveScore').textContent = driveScore;
+            document.getElementById('toleranceScore').textContent = toleranceScore;
+            document.getElementById('resultContent').innerHTML = profile.content;
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // 显示数据面板
+        function showAdminPanel() {
+            const password = prompt('请输入访问密码：');
+            if (password !== 'scpi2024') {
+                alert('密码错误！');
+                return;
+            }
+            
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('quizForm').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            
+            updateAdminStats();
+        }
+        
+        // 返回问卷
+        function backToQuiz() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('quizForm').style.display = 'block';
+            document.querySelector('.progress-bar').style.display = 'block';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('quizForm').reset();
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+        }
+        
+        // 切换标签
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'typeDist') drawTypeChart();
+            else if (tabName === 'dimensions') drawScatterChart();
+            else if (tabName === 'timeline') drawTimelineChart();
+            else if (tabName === 'rawdata') updateRawDataTable();
+        }
+        
+        // 更新统计数据
+        function updateAdminStats() {
+            const data = getAllData();
+            
+            const counts = { AH: 0, AM: 0, AL: 0, PH: 0, PM: 0, PL: 0, UN: 0 };
+            data.forEach(d => { counts[d.type]++; });
+            
+            document.getElementById('totalResponses').textContent = data.length;
+            document.getElementById('ahCount').textContent = counts.AH;
+            document.getElementById('amCount').textContent = counts.AM;
+            document.getElementById('alCount').textContent = counts.AL;
+            document.getElementById('phCount').textContent = counts.PH;
+            document.getElementById('pmCount').textContent = counts.PM;
+            document.getElementById('plCount').textContent = counts.PL;
+            document.getElementById('unCount').textContent = counts.UN;
+            
+            drawTypeChart();
+        }
+        
+        // 绘制类型分布图
+        function drawTypeChart() {
+            const data = getAllData();
+            const counts = { AH: 0, AM: 0, AL: 0, PH: 0, PM: 0, PL: 0, UN: 0 };
+            data.forEach(d => { counts[d.type]++; });
+            
+            const ctx = document.getElementById('typeChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['卷王(AH)', '自驱者(AM)', '执鞭者(AL)', '韧草(PH)', '裹挟者(PM)', '避卷者(PL)', '混沌者(UN)'],
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: ['#e74c3c', '#f39c12', '#e67e22', '#27ae60', '#3498db', '#9b59b6', '#95a5a6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+        }
+        
+        // 绘制散点图
+        function drawScatterChart() {
+            const data = getAllData();
+            const scatterData = data.map(d => ({ x: d.driveScore, y: d.toleranceScore }));
+            
+            const ctx = document.getElementById('scatterChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: '参与者分布',
+                        data: scatterData,
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: '驱动力得分' }, min: 20, max: 60 },
+                        y: { title: { display: true, text: '耐受度得分' }, min: 20, max: 60 }
+                    }
+                }
+            });
+        }
+        
+        // 绘制时间趋势图
+        function drawTimelineChart() {
+            const data = getAllData();
+            const dateCounts = {};
+            
+            data.forEach(d => {
+                const date = d.timestamp.split(' ')[0];
+                dateCounts[date] = (dateCounts[date] || 0) + 1;
+            });
+            
+            const sortedDates = Object.keys(dateCounts).sort();
+            
+            const ctx = document.getElementById('timelineChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates,
+                    datasets: [{
+                        label: '每日参与人数',
+                        data: sortedDates.map(d => dateCounts[d]),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+        
+        // 更新原始数据表
+        function updateRawDataTable() {
+            const data = getAllData();
+            const tbody = document.getElementById('rawDataBody');
+            tbody.innerHTML = '';
+            
+            data.forEach((d, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${d.timestamp}</td>
+                    <td>${d.type}</td>
+                    <td>${d.driveScore}</td>
+                    <td>${d.toleranceScore}</td>
+                    ${Array.from({length: 20}, (_, i) => `<td>${d.answers[`q${i+1}`]}</td>`).join('')}
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // 导出数据
+        function exportData() {
+            const data = getAllData();
+            if (data.length === 0) {
+                alert('暂无数据可导出！');
+                return;
+            }
+            
+            let csv = '序号,时间,类型,驱动力,耐受度,';
+            for (let i = 1; i <= 20; i++) csv += `Q${i},`;
+            csv += '\n';
+            
+            data.forEach((d, index) => {
+                csv += `${index + 1},${d.timestamp},${d.type},${d.driveScore},${d.toleranceScore},`;
+                for (let i = 1; i <= 20; i++) csv += `${d.answers[`q${i}`]},`;
+                csv += '\n';
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `SCPI数据_${new Date().toLocaleDateString('zh-CN')}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
